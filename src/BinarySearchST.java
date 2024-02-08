@@ -1,4 +1,4 @@
-public class BinarySearchST<Key extends Comparable, Value> implements SymbolTable<Key, Value> {
+public class BinarySearchST<Key extends Comparable<Key>, Value> implements SymbolTable<Key, Value> {
 
     // private fields
     private Key[] keys; // array of keys
@@ -9,7 +9,7 @@ public class BinarySearchST<Key extends Comparable, Value> implements SymbolTabl
     {
         // capacity is the potential space we will use
         // size is the actual space used
-        keys = (Key[])new Object[capacity];
+        keys = (Key[])new Comparable[capacity];
         values = (Value[])new Object[capacity];
 
 
@@ -46,7 +46,26 @@ public class BinarySearchST<Key extends Comparable, Value> implements SymbolTabl
      */
     @Override
     public void put(Key key, Value val) {
+        int i = rank(key);
 
+        if (i < size && key.compareTo(keys[i]) == 0) {
+            // we found the key in the keys array
+            // so that means a value already exists, overwrite the existing value
+            values[i] = val;
+            return;
+        }
+
+        // key is not in the array
+        for (int j = size; j > i; j--)
+        {
+            keys[j] = keys[j-1];
+            values[j] = values[j-1];
+        }
+
+        // once we get here, shifting is done and there's a spot
+        keys[i] = key;
+        values[i] = val;
+        size++;
     }
 
     /**
@@ -56,8 +75,22 @@ public class BinarySearchST<Key extends Comparable, Value> implements SymbolTabl
      */
     @Override
     public Value get(Key key) {
+        if (isEmpty())
+        {
+            return null;
+        }
+
+        int i = rank(key);
+        // rank() is going to give us the index of where the key is located
+        // OR is going to give us the index of where the key should go if it's not there
+
+        if (key.equals(keys[i]))
+        {
+            return values[i];
+        }
         return null;
     }
+
 
     /**
      * Remove key (and it's value) from the table.
@@ -96,7 +129,7 @@ public class BinarySearchST<Key extends Comparable, Value> implements SymbolTabl
      */
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     /**
@@ -105,6 +138,11 @@ public class BinarySearchST<Key extends Comparable, Value> implements SymbolTabl
      */
     @Override
     public Iterable<Key> keys() {
-        return null;
+        Queue<Key> q = new LinkedQueue<>();
+        // walk through keys array and enqueue all the keys
+        for (int i = 0; i < size; i++) {
+            q.enqueue(keys[i]);
+        }
+        return q;
     }
 }
