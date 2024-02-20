@@ -1,9 +1,10 @@
 
 // BST == Binary Search Tree
-public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key, Value>{
+public class RedBlackBST<Key extends Comparable<Key>, Value> implements SymbolTable<Key, Value>{
 
     private Node root;
-
+    private static final boolean RED = true;
+    private static final boolean BLACK = false;
     private class Node {
         Key key;
         Value value;
@@ -12,6 +13,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         Node right;
         //Node parent;
         int nodesInSubtree; // author calls this int N;
+        boolean color; // color of link from parent to this node
 
 
         public Node(Key key, Value value)
@@ -23,7 +25,7 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
 
     }
 
-    public BST()
+    public RedBlackBST()
     {
         root = null;
     }
@@ -56,6 +58,10 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         else {
             current.value = value;
         }
+
+        // add some code here to check if there are "4-nodes"
+        // indicated by a node having both left and right red links
+        // and rebalance via rotation
 
         current.nodesInSubtree = size(current.left) + size(current.right) + 1;
         return current;
@@ -146,5 +152,22 @@ public class BST<Key extends Comparable<Key>, Value> implements SymbolTable<Key,
         inorder(current.left, q);
         q.enqueue(current.key);
         inorder(current.right, q);
+    }
+
+    // helper methods for red-black tree
+    private boolean isRed(Node current) {
+        return false; // stub
+    }
+
+    private Node rotateLeft(Node current) {
+        return null; // stub
+    }
+
+    private Node rotateRight(Node current) {
+        return null; // stub
+    }
+
+    private void flipColors(Node current) {
+
     }
 }
