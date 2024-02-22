@@ -2,10 +2,12 @@ public class SeparateChainingHashST<Key, Value> implements SymbolTable<Key, Valu
     // private fields
     // array of linked lists
     private SequentialSearchST<Key, Value>[] table;
-    private int tableSize;
+    private int tableSize; // size of the array
+    private int size; // number of actual keys in the table
 
     public SeparateChainingHashST(int tableSize) {
         this.tableSize = tableSize;
+        size = 0;
         // creates an array (each element is default initialized to null)
         table = new SequentialSearchST[tableSize];
 
@@ -34,6 +36,11 @@ public class SeparateChainingHashST<Key, Value> implements SymbolTable<Key, Valu
      */
     @Override
     public void put(Key key, Value val) {
+        // if the table doesn't contain the key, bump the size up
+        if(!table[hash(key)].contains(key)) {
+            size++;
+        }
+        // add the new key, replace the value associated with the key if already there
         table[hash(key)].put(key, val);
     }
 
@@ -54,7 +61,7 @@ public class SeparateChainingHashST<Key, Value> implements SymbolTable<Key, Valu
      */
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     /**
@@ -63,6 +70,13 @@ public class SeparateChainingHashST<Key, Value> implements SymbolTable<Key, Valu
      */
     @Override
     public Iterable<Key> keys() {
-        return null;
+        Queue<Key> q = new LinkedQueue<Key>();
+
+        for (int i = 0; i < tableSize; i++) {
+            for (Key singleKey : table[i].keys()) {
+                q.enqueue(singleKey);
+            }
+        }
+        return q;
     }
 }
