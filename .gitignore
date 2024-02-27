@@ -27,3 +27,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/leipzig1M.txt
+/leipzig100K.txt
+/leipzig300K.txt
